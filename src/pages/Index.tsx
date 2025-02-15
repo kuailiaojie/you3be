@@ -19,20 +19,25 @@ export default function Index() {
   return (
     <div className="min-h-screen bg-white pb-16 md:pb-0">
       <div className="container mx-auto py-8 px-4">
-        <SearchBar onSearch={setSearchTerm} />
-        {isLoading ? (
-          <div className="flex justify-center">
-            <div className="w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full animate-spin" />
+        {!searchTerm && !videos.length ? (
+          <div className="flex flex-col items-center justify-center min-h-[80vh]">
+            <SearchBar onSearch={setSearchTerm} />
+            <p className="text-gray-500 mt-4">Search for videos to get started</p>
           </div>
-        ) : searchTerm ? (
-          <VideoGrid
-            videos={videos}
-            onVideoSelect={(video) => navigate(`/watch/${video.id}`)}
-          />
         ) : (
-          <div className="text-center text-gray-500">
-            <p>Search for videos to get started</p>
-          </div>
+          <>
+            <SearchBar onSearch={setSearchTerm} />
+            {isLoading ? (
+              <div className="flex justify-center">
+                <div className="w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full animate-spin" />
+              </div>
+            ) : (
+              <VideoGrid
+                videos={videos}
+                onVideoSelect={(video) => navigate(`/watch/${video.id}`)}
+              />
+            )}
+          </>
         )}
       </div>
     </div>
