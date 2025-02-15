@@ -19,8 +19,9 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <div className="flex flex-col min-h-screen">
-          <main className="flex-1">
+        <div className="flex min-h-screen">
+          <Navigation />
+          <main className="flex-1 md:ml-16">
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/watch/:videoId" element={<Watch />} />
@@ -29,7 +30,6 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
-          <Navigation />
         </div>
       </BrowserRouter>
     </TooltipProvider>
