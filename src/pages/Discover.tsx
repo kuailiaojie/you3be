@@ -1,38 +1,31 @@
 
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { searchVideos } from "@/lib/youtube";
-import { SearchBar } from "@/components/SearchBar";
 import { VideoGrid } from "@/components/VideoGrid";
+import { useNavigate } from "react-router-dom";
 
-export default function Index() {
+const DISCOVER_CATEGORIES = ["Music", "Gaming", "News", "Sports", "Education"];
+
+export default function Discover() {
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState("");
-
   const { data: videos = [], isLoading } = useQuery({
-    queryKey: ["videos", searchTerm],
-    queryFn: () => searchVideos(searchTerm),
-    enabled: !!searchTerm,
+    queryKey: ["discover"],
+    queryFn: () => searchVideos(DISCOVER_CATEGORIES[Math.floor(Math.random() * DISCOVER_CATEGORIES.length)]),
   });
 
   return (
     <div className="min-h-screen bg-white pb-16 md:pb-0">
       <div className="container mx-auto py-8 px-4">
-        <SearchBar onSearch={setSearchTerm} />
+        <h1 className="text-2xl font-bold text-gray-900 mb-8">Discover</h1>
         {isLoading ? (
           <div className="flex justify-center">
             <div className="w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full animate-spin" />
           </div>
-        ) : searchTerm ? (
+        ) : (
           <VideoGrid
             videos={videos}
             onVideoSelect={(video) => navigate(`/watch/${video.id}`)}
           />
-        ) : (
-          <div className="text-center text-gray-500">
-            <p>Search for videos to get started</p>
-          </div>
         )}
       </div>
     </div>
