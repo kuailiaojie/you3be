@@ -1,5 +1,18 @@
 
-const YOUTUBE_API_KEY = 'AIzaSyC9bfBP9qbOsHjlqPmX8o2rnxN9XjYkzQU'; // 这是一个演示用的公开API密钥
+const getStoredSettings = () => {
+  const apiKey = localStorage.getItem('youtubeApiKey') || 'AIzaSyC9bfBP9qbOsHjlqPmX8o2rnxN9XjYkzQU';
+  const proxyEnabled = localStorage.getItem('proxyEnabled') === 'true';
+  const proxyUrl = localStorage.getItem('proxyUrl') || '';
+  return { apiKey, proxyEnabled, proxyUrl };
+};
+
+const getProxiedUrl = (url: string) => {
+  const { proxyEnabled, proxyUrl } = getStoredSettings();
+  if (proxyEnabled && proxyUrl) {
+    return `${proxyUrl}/${url}`;
+  }
+  return url;
+};
 
 export interface Video {
   id: string;
@@ -13,9 +26,11 @@ export interface Video {
 }
 
 export async function searchVideos(query: string): Promise<Video[]> {
-  const response = await fetch(
-    `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&q=${query}&type=video&key=${YOUTUBE_API_KEY}`
-  );
+  const { apiKey } = getStoredSettings();
+  const baseUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&q=${query}&type=video&key=${apiKey}`;
+  const url = getProxiedUrl(baseUrl);
+  
+  const response = await fetch(url);
   const data = await response.json();
   
   return data.items.map((item: any) => ({
@@ -31,9 +46,11 @@ export async function searchVideos(query: string): Promise<Video[]> {
 }
 
 export async function getVideoDetails(videoId: string): Promise<Video> {
-  const response = await fetch(
-    `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${videoId}&key=${YOUTUBE_API_KEY}`
-  );
+  const { apiKey } = getStoredSettings();
+  const baseUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${videoId}&key=${apiKey}`;
+  const url = getProxiedUrl(baseUrl);
+  
+  const response = await fetch(url);
   const data = await response.json();
   const item = data.items[0];
   
