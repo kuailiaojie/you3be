@@ -18,7 +18,7 @@ export default function Discover() {
       <div className="container mx-auto py-8 px-4">
         <h1 className="text-2xl font-bold text-foreground mb-8">Discover</h1>
         {isLoading ? (
-          <div className="flex justify-center">
+          <div className="flex justify-center my-12">
             <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
           </div>
         ) : (
