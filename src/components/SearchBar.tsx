@@ -24,11 +24,11 @@ export function SearchBar({ onSearch }: SearchBarProps) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search videos..."
-          className="w-full px-4 py-3 pr-12 rounded-lg border border-gray-200 focus:outline-none focus:border-red-500 transition-colors"
+          className="w-full px-4 py-3 pr-12 rounded-lg bg-secondary border border-border/20 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
         />
         <button
           type="submit"
-          className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-red-500 transition-colors"
+          className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-muted-foreground hover:text-primary transition-colors"
         >
           <Search className="w-5 h-5" />
         </button>

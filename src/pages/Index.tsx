@@ -17,19 +17,19 @@ export default function Index() {
   });
 
   return (
-    <div className="min-h-screen bg-white pb-16 md:pb-0">
+    <div className="min-h-screen bg-background pb-16 md:pb-0">
       <div className="container mx-auto py-8 px-4">
         {!searchTerm && !videos.length ? (
           <div className="flex flex-col items-center justify-center min-h-[80vh]">
             <SearchBar onSearch={setSearchTerm} />
-            <p className="text-gray-500 mt-4">Search for videos to get started</p>
+            <p className="text-muted-foreground mt-4">Search for videos to get started</p>
           </div>
         ) : (
           <>
             <SearchBar onSearch={setSearchTerm} />
             {isLoading ? (
               <div className="flex justify-center">
-                <div className="w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full animate-spin" />
+                <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
               </div>
             ) : (
               <VideoGrid
