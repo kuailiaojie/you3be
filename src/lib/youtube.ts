@@ -1,6 +1,6 @@
 
 const getStoredSettings = () => {
-  const apiKey = localStorage.getItem('youtubeApiKey') || 'AIzaSyC9bfBP9qbOsHjlqPmX8o2rnxN9XjYkzQU';
+  const apiKey = localStorage.getItem('youtubeApiKey') || '';
   const proxyEnabled = localStorage.getItem('proxyEnabled') === 'true';
   const proxyUrl = localStorage.getItem('proxyUrl') || '';
   return { apiKey, proxyEnabled, proxyUrl };
@@ -27,11 +27,20 @@ export interface Video {
 
 export async function searchVideos(query: string): Promise<Video[]> {
   const { apiKey } = getStoredSettings();
+  
+  if (!apiKey) {
+    throw new Error('YouTube API key not configured. Please set it in the Settings page.');
+  }
+  
   const baseUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&q=${query}&type=video&key=${apiKey}`;
   const url = getProxiedUrl(baseUrl);
   
   const response = await fetch(url);
   const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.error?.message || 'Failed to fetch videos');
+  }
   
   return data.items.map((item: any) => ({
     id: item.id.videoId,
@@ -47,11 +56,21 @@ export async function searchVideos(query: string): Promise<Video[]> {
 
 export async function getVideoDetails(videoId: string): Promise<Video> {
   const { apiKey } = getStoredSettings();
+  
+  if (!apiKey) {
+    throw new Error('YouTube API key not configured. Please set it in the Settings page.');
+  }
+  
   const baseUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${videoId}&key=${apiKey}`;
   const url = getProxiedUrl(baseUrl);
   
   const response = await fetch(url);
   const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.error?.message || 'Failed to fetch video details');
+  }
+  
   const item = data.items[0];
   
   return {

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -8,9 +7,9 @@ export default function Settings() {
   const [darkMode, setDarkMode] = useState(false);
   const [autoplay, setAutoplay] = useState(true);
   const [quality, setQuality] = useState("auto");
-  const [youtubeApiKey, setYoutubeApiKey] = useState("");
-  const [proxyEnabled, setProxyEnabled] = useState(false);
-  const [proxyUrl, setProxyUrl] = useState("");
+  const [youtubeApiKey, setYoutubeApiKey] = useState(() => localStorage.getItem('youtubeApiKey') || '');
+  const [proxyEnabled, setProxyEnabled] = useState(() => localStorage.getItem('proxyEnabled') === 'true');
+  const [proxyUrl, setProxyUrl] = useState(() => localStorage.getItem('proxyUrl') || '');
 
   const handleSaveSettings = () => {
     // Save settings to localStorage
