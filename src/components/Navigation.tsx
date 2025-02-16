@@ -11,8 +11,8 @@ export function Navigation() {
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 md:fixed md:left-0 md:top-0 md:bottom-0 md:w-16 bg-secondary border-t md:border-t-0 md:border-r border-border/20">
-      <div className="container mx-auto px-4 md:px-0 md:py-8">
-        <div className="flex justify-around md:flex-col md:items-center md:gap-8 py-3 md:py-0">
+      <div className="container mx-auto px-4 md:px-0 md:py-8 h-full">
+        <div className="flex justify-around md:flex-col md:justify-center md:items-center md:h-full md:gap-8 py-3 md:py-0">
           <Link
             to="/"
             className={`flex flex-col items-center ${

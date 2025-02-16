@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -19,14 +20,14 @@ export default function Settings() {
   };
 
   return (
-    <div className="min-h-screen bg-white pb-16 md:pb-0">
+    <div className="min-h-screen bg-background pb-16 md:pb-0">
       <div className="container mx-auto py-8 px-4">
-        <h1 className="text-2xl font-bold text-gray-900 mb-8">Settings</h1>
+        <h1 className="text-2xl font-bold text-foreground mb-8">Settings</h1>
         <div className="space-y-8">
           <div className="space-y-6">
-            <h2 className="text-lg font-semibold text-gray-900">Display Settings</h2>
+            <h2 className="text-lg font-semibold text-foreground">Display Settings</h2>
             <div className="flex items-center justify-between">
-              <Label htmlFor="dark-mode">Dark Mode</Label>
+              <Label htmlFor="dark-mode" className="text-foreground">Dark Mode</Label>
               <Switch
                 id="dark-mode"
                 checked={darkMode}
@@ -34,7 +35,7 @@ export default function Settings() {
               />
             </div>
             <div className="flex items-center justify-between">
-              <Label htmlFor="autoplay">Autoplay</Label>
+              <Label htmlFor="autoplay" className="text-foreground">Autoplay</Label>
               <Switch
                 id="autoplay"
                 checked={autoplay}
@@ -42,12 +43,12 @@ export default function Settings() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="quality">Video Quality</Label>
+              <Label htmlFor="quality" className="text-foreground">Video Quality</Label>
               <select
                 id="quality"
                 value={quality}
                 onChange={(e) => setQuality(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:border-red-500"
+                className="w-full px-3 py-2 border border-border rounded-lg bg-secondary text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="auto">Auto</option>
                 <option value="1080p">1080p</option>
@@ -59,24 +60,24 @@ export default function Settings() {
           </div>
 
           <div className="space-y-6">
-            <h2 className="text-lg font-semibold text-gray-900">API Settings</h2>
+            <h2 className="text-lg font-semibold text-foreground">API Settings</h2>
             <div className="space-y-2">
-              <Label htmlFor="youtube-api">YouTube Data API Key</Label>
+              <Label htmlFor="youtube-api" className="text-foreground">YouTube Data API Key</Label>
               <Input
                 id="youtube-api"
                 type="text"
                 value={youtubeApiKey}
                 onChange={(e) => setYoutubeApiKey(e.target.value)}
                 placeholder="Enter your YouTube Data API key"
-                className="w-full"
+                className="w-full bg-secondary text-foreground placeholder:text-muted-foreground"
               />
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-muted-foreground">
                 You can get your API key from the{" "}
                 <a
                   href="https://console.cloud.google.com/apis/credentials"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-red-500 hover:underline"
+                  className="text-primary hover:underline"
                 >
                   Google Cloud Console
                 </a>
@@ -85,9 +86,9 @@ export default function Settings() {
           </div>
 
           <div className="space-y-6">
-            <h2 className="text-lg font-semibold text-gray-900">Proxy Settings</h2>
+            <h2 className="text-lg font-semibold text-foreground">Proxy Settings</h2>
             <div className="flex items-center justify-between">
-              <Label htmlFor="proxy-enabled">Enable Global Proxy</Label>
+              <Label htmlFor="proxy-enabled" className="text-foreground">Enable Global Proxy</Label>
               <Switch
                 id="proxy-enabled"
                 checked={proxyEnabled}
@@ -96,16 +97,16 @@ export default function Settings() {
             </div>
             {proxyEnabled && (
               <div className="space-y-2">
-                <Label htmlFor="proxy-url">Proxy URL</Label>
+                <Label htmlFor="proxy-url" className="text-foreground">Proxy URL</Label>
                 <Input
                   id="proxy-url"
                   type="text"
                   value={proxyUrl}
                   onChange={(e) => setProxyUrl(e.target.value)}
                   placeholder="Enter proxy URL (e.g., https://your-proxy.com)"
-                  className="w-full"
+                  className="w-full bg-secondary text-foreground placeholder:text-muted-foreground"
                 />
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-muted-foreground">
                   All external resources will be proxied through this URL
                 </p>
               </div>
@@ -114,7 +115,7 @@ export default function Settings() {
 
           <button
             onClick={handleSaveSettings}
-            className="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+            className="w-full px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
           >
             Save Settings
           </button>

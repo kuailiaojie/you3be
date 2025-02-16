@@ -14,12 +14,12 @@ export default function Discover() {
   });
 
   return (
-    <div className="min-h-screen bg-white pb-16 md:pb-0">
+    <div className="min-h-screen bg-background pb-16 md:pb-0 md:pl-16">
       <div className="container mx-auto py-8 px-4">
-        <h1 className="text-2xl font-bold text-gray-900 mb-8">Discover</h1>
+        <h1 className="text-2xl font-bold text-foreground mb-8">Discover</h1>
         {isLoading ? (
           <div className="flex justify-center">
-            <div className="w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full animate-spin" />
+            <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
           </div>
         ) : (
           <VideoGrid
