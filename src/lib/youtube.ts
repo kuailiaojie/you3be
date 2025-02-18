@@ -26,32 +26,48 @@ export interface Video {
 }
 
 export async function searchVideos(query: string): Promise<Video[]> {
+  if (!query) {
+    return [];
+  }
+
   const { apiKey } = getStoredSettings();
   
   if (!apiKey) {
     throw new Error('YouTube API key not configured. Please set it in the Settings page.');
   }
-  
-  const baseUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&q=${query}&type=video&key=${apiKey}`;
+
+  const encodedQuery = encodeURIComponent(query);
+  const baseUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&q=${encodedQuery}&type=video&key=${apiKey}`;
   const url = getProxiedUrl(baseUrl);
   
-  const response = await fetch(url);
-  const data = await response.json();
-  
-  if (!response.ok) {
-    throw new Error(data.error?.message || 'Failed to fetch videos');
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    
+    if (!response.ok) {
+      console.error('YouTube API Error:', data);
+      throw new Error(data.error?.message || 'Failed to fetch videos');
+    }
+    
+    if (!data.items || !Array.isArray(data.items)) {
+      console.error('Invalid response format:', data);
+      return [];
+    }
+    
+    return data.items.map((item: any) => ({
+      id: item.id.videoId,
+      title: item.snippet.title,
+      description: item.snippet.description,
+      thumbnail: item.snippet.thumbnails.medium.url,
+      channelTitle: item.snippet.channelTitle,
+      publishedAt: item.snippet.publishedAt,
+      viewCount: "Loading...",
+      likeCount: "Loading..."
+    }));
+  } catch (error) {
+    console.error('Search error:', error);
+    throw error;
   }
-  
-  return data.items.map((item: any) => ({
-    id: item.id.videoId,
-    title: item.snippet.title,
-    description: item.snippet.description,
-    thumbnail: item.snippet.thumbnails.medium.url,
-    channelTitle: item.snippet.channelTitle,
-    publishedAt: item.snippet.publishedAt,
-    viewCount: "Loading...",
-    likeCount: "Loading..."
-  }));
 }
 
 export async function getVideoDetails(videoId: string): Promise<Video> {

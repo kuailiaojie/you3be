@@ -5,15 +5,24 @@ import { useQuery } from "@tanstack/react-query";
 import { searchVideos } from "@/lib/youtube";
 import { SearchBar } from "@/components/SearchBar";
 import { VideoGrid } from "@/components/VideoGrid";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function Index() {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
 
-  const { data: videos = [], isLoading } = useQuery({
+  const { data: videos = [], isLoading, error } = useQuery({
     queryKey: ["videos", searchTerm],
     queryFn: () => searchVideos(searchTerm),
     enabled: !!searchTerm,
+    onError: (err: Error) => {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: err.message,
+      });
+    }
   });
 
   return (
@@ -30,6 +39,10 @@ export default function Index() {
             {isLoading ? (
               <div className="flex justify-center my-12">
                 <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+              </div>
+            ) : error ? (
+              <div className="text-center text-muted-foreground mt-8">
+                Please check your API key in settings and try again
               </div>
             ) : (
               <VideoGrid
