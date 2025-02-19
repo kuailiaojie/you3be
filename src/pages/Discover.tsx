@@ -1,10 +1,10 @@
 
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { searchVideos } from "@/lib/youtube";
 import { VideoGrid } from "@/components/VideoGrid";
 import { useNavigate } from "react-router-dom";
 import { Filter } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Select,
   SelectContent,
@@ -37,11 +37,42 @@ export default function Discover() {
   const navigate = useNavigate();
   const [category, setCategory] = useState(CATEGORIES[0]);
   const [sortBy, setSortBy] = useState("relevance");
+  const loadMoreRef = useRef<HTMLDivElement>(null);
 
-  const { data: videos = [], isLoading } = useQuery({
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetching
+  } = useInfiniteQuery({
     queryKey: ["discover", category, sortBy],
-    queryFn: () => searchVideos(`${category.toLowerCase()} ${sortBy === "date" ? "this week" : ""}`),
+    queryFn: ({ pageParam }) => {
+      return searchVideos(
+        `${category.toLowerCase()} ${sortBy === "date" ? "this week" : ""}`,
+        pageParam as string
+      );
+    },
+    getNextPageParam: (lastPage) => lastPage.nextPageToken,
   });
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetching) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetching, fetchNextPage]);
+
+  const allVideos = data?.pages.flatMap(page => page.videos) ?? [];
 
   return (
     <div className="min-h-screen bg-background pb-16 md:pb-0 md:pl-16">
@@ -78,16 +109,15 @@ export default function Discover() {
             </Select>
           </div>
         </div>
-        {isLoading ? (
-          <div className="flex justify-center my-12">
+        <VideoGrid
+          videos={allVideos}
+          onVideoSelect={(video) => navigate(`/watch/${video.id}`)}
+        />
+        <div ref={loadMoreRef} className="h-10 flex items-center justify-center mt-4">
+          {isFetching && (
             <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-          </div>
-        ) : (
-          <VideoGrid
-            videos={videos}
-            onVideoSelect={(video) => navigate(`/watch/${video.id}`)}
-          />
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

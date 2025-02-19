@@ -25,9 +25,9 @@ export interface Video {
   likeCount: string;
 }
 
-export async function searchVideos(query: string): Promise<Video[]> {
+export async function searchVideos(query: string, pageToken?: string): Promise<{videos: Video[], nextPageToken?: string}> {
   if (!query) {
-    return [];
+    return { videos: [] };
   }
 
   const { apiKey } = getStoredSettings();
@@ -37,7 +37,7 @@ export async function searchVideos(query: string): Promise<Video[]> {
   }
 
   const encodedQuery = encodeURIComponent(query);
-  const baseUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&q=${encodedQuery}&type=video&key=${apiKey}`;
+  const baseUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&q=${encodedQuery}&type=video&key=${apiKey}${pageToken ? `&pageToken=${pageToken}` : ''}`;
   const url = getProxiedUrl(baseUrl);
   
   try {
@@ -51,10 +51,10 @@ export async function searchVideos(query: string): Promise<Video[]> {
     
     if (!data.items || !Array.isArray(data.items)) {
       console.error('Invalid response format:', data);
-      return [];
+      return { videos: [] };
     }
     
-    return data.items.map((item: any) => ({
+    const videos = data.items.map((item: any) => ({
       id: item.id.videoId,
       title: item.snippet.title,
       description: item.snippet.description,
@@ -64,6 +64,11 @@ export async function searchVideos(query: string): Promise<Video[]> {
       viewCount: "Loading...",
       likeCount: "Loading..."
     }));
+
+    return {
+      videos,
+      nextPageToken: data.nextPageToken
+    };
   } catch (error) {
     console.error('Search error:', error);
     throw error;
