@@ -1,4 +1,3 @@
-
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { searchVideos } from "@/lib/youtube";
 import { VideoGrid } from "@/components/VideoGrid";
@@ -53,6 +52,7 @@ export default function Discover() {
       );
     },
     getNextPageParam: (lastPage) => lastPage.nextPageToken,
+    initialPageParam: null
   });
 
   useEffect(() => {

@@ -49,7 +49,8 @@ export default function Index() {
       return searchVideos(query, pageParam as string);
     },
     getNextPageParam: (lastPage) => lastPage.nextPageToken,
-    enabled: !!(searchTerm || category !== "All"),
+    enabled: !!searchTerm,
+    initialPageParam: null,
     meta: {
       onError: (err: Error) => {
         toast({
@@ -84,26 +85,28 @@ export default function Index() {
     <div className="min-h-screen bg-background pb-16 md:pb-0 md:pl-16">
       <div className="container mx-auto py-8 px-4">
         <div className={`${(!searchTerm && !allVideos.length) ? 'flex flex-col items-center justify-center min-h-[80vh]' : ''}`}>
-          <div className="w-full max-w-2xl mx-auto">
+          <div className="w-full max-w-2xl mx-auto mb-8">
             <SearchBar onSearch={setSearchTerm} />
-            <div className="flex items-center gap-2 mt-4 mb-8">
-              <Filter className="w-4 h-4 text-muted-foreground" />
-              <Select value={category} onValueChange={setCategory}>
-                <SelectTrigger className="w-[140px]">
-                  <SelectValue placeholder="Category" />
-                </SelectTrigger>
-                <SelectContent>
-                  {CATEGORIES.map((cat) => (
-                    <SelectItem key={cat} value={cat}>
-                      {cat}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            {searchTerm && (
+              <div className="flex items-center gap-2 mt-4">
+                <Filter className="w-4 h-4 text-muted-foreground" />
+                <Select value={category} onValueChange={setCategory}>
+                  <SelectTrigger className="w-[140px]">
+                    <SelectValue placeholder="Category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CATEGORIES.map((cat) => (
+                      <SelectItem key={cat} value={cat}>
+                        {cat}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
           </div>
-          {!searchTerm && !allVideos.length ? (
-            <p className="text-muted-foreground mt-4 font-medium">Search for videos to get started</p>
+          {!searchTerm ? (
+            <p className="text-muted-foreground mt-4 font-medium text-center">Search for videos to get started</p>
           ) : error ? (
             <div className="text-center text-muted-foreground mt-8">
               Please check your API key in settings and try again
