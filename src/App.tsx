@@ -8,6 +8,8 @@ import { Navigation } from "@/components/Navigation";
 import Index from "./pages/Index";
 import Watch from "./pages/Watch";
 import Discover from "./pages/Discover";
+import Rankings from "./pages/Rankings";
+import History from "./pages/History";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
@@ -26,6 +28,8 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/watch/:videoId" element={<Watch />} />
               <Route path="/discover" element={<Discover />} />
+              <Route path="/rankings" element={<Rankings />} />
+              <Route path="/history" element={<History />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="*" element={<NotFound />} />
             </Routes>

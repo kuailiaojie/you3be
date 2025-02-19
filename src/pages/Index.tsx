@@ -16,12 +16,14 @@ export default function Index() {
     queryKey: ["videos", searchTerm],
     queryFn: () => searchVideos(searchTerm),
     enabled: !!searchTerm,
-    onError: (err: Error) => {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: err.message,
-      });
+    meta: {
+      onError: (err: Error) => {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: err.message,
+        });
+      }
     }
   });
 
