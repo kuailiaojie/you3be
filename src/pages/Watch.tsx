@@ -1,14 +1,16 @@
+
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { VideoPlayer } from "@/components/VideoPlayer";
-import { getVideo, type Video } from "@/lib/youtube";
+import { getVideoDetails, type Video } from "@/lib/youtube";
 
 export default function Watch() {
   const { videoId } = useParams();
+  const navigate = useNavigate();
 
   const { data: video, isLoading } = useQuery({
     queryKey: ["video", videoId],
-    queryFn: () => getVideo(videoId!),
+    queryFn: () => getVideoDetails(videoId!),
     meta: {
       onSuccess: (video: Video) => {
         // Add to watch history
@@ -33,5 +35,10 @@ export default function Watch() {
     );
   }
 
-  return <VideoPlayer video={video} />;
+  return (
+    <VideoPlayer 
+      video={video} 
+      onClose={() => navigate(-1)}
+    />
+  );
 }
