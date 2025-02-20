@@ -1,6 +1,6 @@
 
 import { Link, useLocation } from "react-router-dom";
-import { Home, Compass, Clock, Settings } from "lucide-react";
+import { Home, Compass, Clock, Settings, Video } from "lucide-react";
 
 export function Navigation() {
   const location = useLocation();
@@ -31,6 +31,16 @@ export function Navigation() {
           >
             <div className="relative p-1.5 rounded-lg transition-colors group-hover:bg-primary/10">
               <Compass className="w-5 h-5" />
+            </div>
+          </Link>
+          <Link
+            to="/shorts"
+            className={`flex flex-col items-center group ${
+              isActive("/shorts") ? "text-primary" : "text-muted-foreground"
+            } hover:text-primary transition-colors`}
+          >
+            <div className="relative p-1.5 rounded-lg transition-colors group-hover:bg-primary/10">
+              <Video className="w-5 h-5" />
             </div>
           </Link>
           <Link

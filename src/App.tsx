@@ -11,6 +11,7 @@ import Discover from "./pages/Discover";
 import History from "./pages/History";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
+import Shorts from "./pages/Shorts";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/watch/:videoId" element={<Watch />} />
               <Route path="/discover" element={<Discover />} />
+              <Route path="/shorts" element={<Shorts />} />
               <Route path="/history" element={<History />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="*" element={<NotFound />} />
