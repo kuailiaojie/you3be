@@ -1,3 +1,4 @@
+
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { searchVideos } from "@/lib/youtube";
 import { VideoGrid } from "@/components/VideoGrid";
@@ -62,24 +63,29 @@ export default function Discover() {
           fetchNextPage();
         }
       },
-      { threshold: 0.5 }
+      { threshold: 0.1, rootMargin: "100px" }
     );
 
-    if (loadMoreRef.current) {
-      observer.observe(loadMoreRef.current);
+    const currentRef = loadMoreRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
-    return () => observer.disconnect();
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
   }, [hasNextPage, isFetching, fetchNextPage]);
 
   const allVideos = data?.pages.flatMap(page => page.videos) ?? [];
 
   return (
-    <div className="min-h-screen bg-background pb-16 md:pb-0 md:pl-16">
+    <div className="min-h-screen bg-background pb-16 md:pb-0 md:pl-16 overflow-y-auto">
       <div className="container mx-auto py-8 px-4">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4">
           <h1 className="text-2xl font-bold text-foreground">Discover</h1>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center gap-2">
               <Filter className="w-4 h-4 text-muted-foreground" />
               <Select value={category} onValueChange={setCategory}>
@@ -109,15 +115,23 @@ export default function Discover() {
             </Select>
           </div>
         </div>
-        <VideoGrid
-          videos={allVideos}
-          onVideoSelect={(video) => navigate(`/watch/${video.id}`)}
-        />
-        <div ref={loadMoreRef} className="h-10 flex items-center justify-center mt-4">
-          {isFetching && (
+        {allVideos.length === 0 && isFetching ? (
+          <div className="flex justify-center items-center min-h-[50vh]">
             <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-          )}
-        </div>
+          </div>
+        ) : (
+          <>
+            <VideoGrid
+              videos={allVideos}
+              onVideoSelect={(video) => navigate(`/watch/${video.id}`)}
+            />
+            <div ref={loadMoreRef} className="h-20 flex items-center justify-center mt-4">
+              {isFetching && (
+                <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+              )}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
