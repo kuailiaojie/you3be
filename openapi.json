@@ -1,0 +1,541 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "BibiGPT OpenAPI Spec",
+    "description": "音视频 AI 学习助理的开放 API，加速音视频内容的信息提取，借助 AI 直接采取行动。",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://bibigpt.co"
+    }
+  ],
+  "paths": {
+    "/api/open/{apiToken}": {
+      "get": {
+        "description": "Returns the video summary",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "apiToken",
+            "description": "The API token associated with the user (e.g., /api/open/alzp32Ml2a2G)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "url",
+            "description": "The URL to the video (e.g., ?url=https://www.bilibili.com/video/BV1Sk4y1x7r2)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success to get simple summary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenAPISimpleSummaryResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Returns the video summary and subtitlesArray in detail",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "apiToken",
+            "description": "The API token associated with the user (e.g., /api/open/alzp32Ml2a2G)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ApiTokenParams"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success to get summary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenAPISimpleSummaryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/open/{apiToken}/chat": {
+      "post": {
+        "description": "Chat with video content, ask question with history and get answer",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "apiToken",
+            "description": "The API token associated with the user (e.g., /api/open/alzp32Ml2a2G)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatSchema"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success to get summary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenAPIChatResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/open/{apiToken}/express": {
+      "post": {
+        "description": "Express to article based on video content",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "apiToken",
+            "description": "The API token associated with the user (e.g., /api/open/alzp32Ml2a2G)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExpressArticleSchema"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success to get summary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenAPIExpressResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/open/{apiToken}/subtitle": {
+      "get": {
+        "description": "Only returns the video subtitlesArray in detail",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "apiToken",
+            "description": "The API token associated with the user (e.g., /api/open/alzp32Ml2a2G)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "url",
+            "description": "The URL to the video (e.g., ?url=https://www.bilibili.com/video/BV1Sk4y1x7r2)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success to get subtitle",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenAPISummaryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/open/{apiToken}/vision": {
+      "post": {
+        "description": "prompt image to generate text",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "apiToken",
+            "description": "The API token associated with the user (e.g., /api/open/alzp32Ml2a2G)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PhotoVisionSchema"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success to generate text",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "text": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Organization": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "parent": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ChatSchema": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "question": {
+            "type": "string"
+          },
+          "history": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "nullable": true
+          },
+          "language": {
+            "type": "string",
+            "nullable": true
+          },
+          "includeDetail": {
+            "type": "boolean",
+            "nullable": true
+          }
+        }
+      },
+      "ExpressArticleSchema": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "articleConfig": {
+            "type": "object",
+            "nullable": true,
+            "properties": {
+              "outputLanguage": {
+                "type": "string",
+                "nullable": true
+              },
+              "showEmoji": {
+                "type": "boolean",
+                "nullable": true
+              },
+              "isRefresh": {
+                "type": "boolean",
+                "nullable": true
+              }
+            }
+          }
+        }
+      },
+      "ReturnDetail": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "descriptionText": {
+            "type": "string"
+          }
+        }
+      },
+      "ApiTokenParams": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "limitation": {
+            "type": "object",
+            "properties": {
+              "maxDuration": {
+                "type": "number",
+                "format": "int64",
+                "description": "in seconds"
+              }
+            }
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "promptConfig": {
+            "type": "object",
+            "properties": {
+              "showEmoji:": {
+                "type": "boolean"
+              },
+              "showTimestamp": {
+                "type": "boolean"
+              },
+              "outlineLevel": {
+                "type": "number"
+              },
+              "sentenceNumber": {
+                "type": "number"
+              },
+              "detailLevel": {
+                "type": "number"
+              },
+              "outputLanguage": {
+                "type": "string"
+              }
+            }
+          },
+          "includeDetail": {
+            "type": "boolean"
+          }
+        }
+      },
+      "OpenAPISimpleSummaryResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "service": {
+            "type": "string"
+          },
+          "sourceUrl": {
+            "type": "string"
+          },
+          "htmlUrl": {
+            "type": "string"
+          },
+          "costDuration": {
+            "type": "number"
+          },
+          "remainingTime": {
+            "type": "number"
+          },
+          "summary": {
+            "type": "string"
+          }
+        }
+      },
+      "OpenAPISummaryResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "service": {
+            "type": "string"
+          },
+          "sourceUrl": {
+            "type": "string"
+          },
+          "htmlUrl": {
+            "type": "string"
+          },
+          "costDuration": {
+            "type": "number"
+          },
+          "remainingTime": {
+            "type": "number"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "detail": {
+            "$ref": "#/components/schemas/ReturnDetail"
+          }
+        }
+      },
+      "OpenAPIChatResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "service": {
+            "type": "string"
+          },
+          "sourceUrl": {
+            "type": "string"
+          },
+          "htmlUrl": {
+            "type": "string"
+          },
+          "costDuration": {
+            "type": "number"
+          },
+          "remainingTime": {
+            "type": "number"
+          },
+          "answer": {
+            "type": "string"
+          },
+          "sourceDocuments": {
+            "type": "array",
+            "items": {
+              "properties": {
+                "pageContent": {
+                  "type": "string"
+                },
+                "metadata": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "OpenAPIExpressResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "service": {
+            "type": "string"
+          },
+          "sourceUrl": {
+            "type": "string"
+          },
+          "htmlUrl": {
+            "type": "string"
+          },
+          "costDuration": {
+            "type": "number"
+          },
+          "remainingTime": {
+            "type": "number"
+          },
+          "article": {
+            "type": "string"
+          }
+        }
+      },
+      "PhotoVisionSchema": {
+        "type": "object",
+        "properties": {
+          "style": {
+            "type": "string",
+            "description": "The style of the generated text 'wechat', 'xhs', 'ppt'",
+            "example": "xhs"
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "imageUrls": {
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": false
+          }
+        }
+      }
+    }
+  },
+  "tags": []
+}
