@@ -5,7 +5,7 @@ import { ThumbsUp, MessageCircle, Share2, Save, X, List, Lightbulb, MessageSquar
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 interface VideoPlayerProps {
   video: Video;
@@ -13,29 +13,73 @@ interface VideoPlayerProps {
 }
 
 interface BiliGptResponse {
-  summary?: string;
-  keyPoints?: string[];
-  mindMap?: string;
-  conversation?: string;
+  success: boolean;
+  summary: string;
+  detail: {
+    summary: string;
+    keyPoints?: string[];
+    mindMap?: string;
+    conversation?: string;
+  };
+}
+
+interface BiliGptRequest {
+  url: string;
+  includeDetail: boolean;
+  promptConfig: {
+    model: string;
+    outputLanguage: string;
+    showEmoji: boolean;
+    detailLevel: number;
+    sentenceNumber: number;
+  };
 }
 
 export function VideoPlayer({ video, onClose }: VideoPlayerProps) {
   const language = localStorage.getItem('language') || 'en';
-  const [gptData, setGptData] = useState<BiliGptResponse>({});
+  const [gptData, setGptData] = useState<BiliGptResponse['detail']>({
+    summary: '',
+    keyPoints: [],
+    mindMap: '',
+    conversation: ''
+  });
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
   const fetchBiliGptData = async () => {
     setIsLoading(true);
     try {
-      // 这里替换为实际的BiliGpt API调用
-      const response = await fetch(`https://api.biligpt.com/analyze?videoId=${video.id}`);
-      const data = await response.json();
-      setGptData(data);
+      const requestData: BiliGptRequest = {
+        url: `https://www.youtube.com/watch?v=${video.id}`,
+        includeDetail: true,
+        promptConfig: {
+          model: "gpt-3.5-turbo",
+          outputLanguage: language === 'zh' ? 'zh-CN' : 'en',
+          showEmoji: true,
+          detailLevel: 2,
+          sentenceNumber: 5
+        }
+      };
+
+      const response = await fetch(`https://api.bibigpt.co/api/open2/${localStorage.getItem('BILIGPT_API_KEY')}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData)
+      });
+
+      const data: BiliGptResponse = await response.json();
+
+      if (data.success) {
+        setGptData(data.detail);
+      } else {
+        throw new Error('Failed to analyze video');
+      }
     } catch (error) {
       toast({
         title: language === 'zh' ? "获取数据失败" : "Failed to fetch data",
-        description: language === 'zh' ? "请稍后重试" : "Please try again later",
+        description: language === 'zh' ? "请检查API密钥是否正确" : "Please check your API key",
         variant: "destructive",
       });
     } finally {
@@ -146,7 +190,7 @@ export function VideoPlayer({ video, onClose }: VideoPlayerProps) {
                       </TabsContent>
 
                       <TabsContent value="keyPoints">
-                        {gptData.keyPoints ? (
+                        {gptData.keyPoints?.length ? (
                           <ul className="list-disc list-inside text-white/80 space-y-2">
                             {gptData.keyPoints.map((point, index) => (
                               <li key={index}>{point}</li>
@@ -177,3 +221,4 @@ export function VideoPlayer({ video, onClose }: VideoPlayerProps) {
     </div>
   );
 }
+
