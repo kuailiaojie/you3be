@@ -2,6 +2,7 @@
 import { type Video } from "@/lib/youtube";
 import { formatNumber } from "@/lib/utils";
 import { ThumbsUp, MessageCircle, Share2, Save, X } from "lucide-react";
+import { VideoSummary } from "@/components/VideoSummary";
 
 interface VideoPlayerProps {
   video: Video;
@@ -62,6 +63,7 @@ export function VideoPlayer({ video, onClose }: VideoPlayerProps) {
                   </div>
                 </div>
               </div>
+              <VideoSummary videoId={video.id} />
             </div>
           </div>
           <div className="bg-[#221F26] rounded-b-lg p-4">
