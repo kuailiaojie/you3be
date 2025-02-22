@@ -23,6 +23,7 @@ export interface Video {
   publishedAt: string;
   viewCount: string;
   likeCount: string;
+  commentCount: string;
 }
 
 export async function searchVideos(query: string, pageToken?: string): Promise<{videos: Video[], nextPageToken?: string}> {
@@ -62,7 +63,8 @@ export async function searchVideos(query: string, pageToken?: string): Promise<{
       channelTitle: item.snippet.channelTitle,
       publishedAt: item.snippet.publishedAt,
       viewCount: "Loading...",
-      likeCount: "Loading..."
+      likeCount: "Loading...",
+      commentCount: "Loading..."
     }));
 
     return {
@@ -102,6 +104,7 @@ export async function getVideoDetails(videoId: string): Promise<Video> {
     channelTitle: item.snippet.channelTitle,
     publishedAt: item.snippet.publishedAt,
     viewCount: item.statistics.viewCount,
-    likeCount: item.statistics.likeCount
+    likeCount: item.statistics.likeCount,
+    commentCount: item.statistics.commentCount
   };
 }
