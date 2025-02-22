@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { getSummary, chatWithVideo } from "@/lib/biligpt";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -33,24 +33,20 @@ export function VideoSummary({ videoId }: VideoSummaryProps) {
     }
   });
 
-  const { mutate: chat, isLoading: isChatLoading } = useQuery({
-    queryKey: ['video-chat', videoId, question],
-    queryFn: () => chatWithVideo(videoId, question, chatHistory),
-    enabled: false,
-    meta: {
-      onSuccess: (data) => {
-        if (data.answer) {
-          setChatHistory(prev => [...prev, [question, data.answer]]);
-          setQuestion("");
-        }
-      },
-      onError: (error: Error) => {
-        toast({
-          title: language === 'zh' ? '错误' : 'Error',
-          description: error.message,
-          variant: "destructive",
-        });
+  const { mutate: chat, isLoading: isChatLoading } = useMutation({
+    mutationFn: () => chatWithVideo(videoId, question, chatHistory),
+    onSuccess: (data) => {
+      if (data.answer) {
+        setChatHistory(prev => [...prev, [question, data.answer]]);
+        setQuestion("");
       }
+    },
+    onError: (error: Error) => {
+      toast({
+        title: language === 'zh' ? '错误' : 'Error',
+        description: error.message,
+        variant: "destructive",
+      });
     }
   });
 
