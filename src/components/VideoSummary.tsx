@@ -33,7 +33,7 @@ export function VideoSummary({ videoId }: VideoSummaryProps) {
     }
   });
 
-  const { mutate: chat, isLoading: isChatLoading } = useMutation({
+  const { mutate: chat, isPending: isChatLoading } = useMutation({
     mutationFn: () => chatWithVideo(videoId, question, chatHistory),
     onSuccess: (data) => {
       if (data.answer) {
