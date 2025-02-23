@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -14,6 +13,8 @@ export default function Settings() {
   const [youtubeApiKey, setYoutubeApiKey] = useState(() => localStorage.getItem('youtubeApiKey') || '');
   const [proxyEnabled, setProxyEnabled] = useState(() => localStorage.getItem('proxyEnabled') === 'true');
   const [proxyUrl, setProxyUrl] = useState(() => localStorage.getItem('proxyUrl') || '');
+  const [biligptApiKey, setBiligptApiKey] = useState(() => localStorage.getItem('BILIGPT_API_KEY') || '');
+  const [biligptApiUrl, setBiligptApiUrl] = useState(() => localStorage.getItem('BILIGPT_API_URL') || 'https://bibigpt.co/api/open');
 
   useEffect(() => {
     if (darkMode) {
@@ -29,6 +30,8 @@ export default function Settings() {
     localStorage.setItem('proxyUrl', proxyUrl);
     localStorage.setItem('darkMode', String(darkMode));
     localStorage.setItem('language', language);
+    localStorage.setItem('BILIGPT_API_KEY', biligptApiKey);
+    localStorage.setItem('BILIGPT_API_URL', biligptApiUrl);
     
     toast({
       title: language === 'zh' ? "设置已保存" : "Settings saved",
@@ -42,6 +45,7 @@ export default function Settings() {
         <h1 className="text-2xl font-bold text-foreground mb-8">
           {language === 'zh' ? '设置' : 'Settings'}
         </h1>
+
         <div className="space-y-8 bg-secondary/50 p-6 rounded-lg backdrop-blur-sm">
           <div className="space-y-6">
             <h2 className="text-lg font-semibold text-foreground">
@@ -163,6 +167,38 @@ export default function Settings() {
                 </p>
               </div>
             )}
+          </div>
+
+          <div className="space-y-6">
+            <h2 className="text-lg font-semibold text-foreground">
+              {language === 'zh' ? 'BiliGPT 设置' : 'BiliGPT Settings'}
+            </h2>
+            <div className="space-y-2">
+              <Label htmlFor="biligpt-api-key" className="text-foreground font-medium">
+                {language === 'zh' ? 'BiliGPT API 密钥' : 'BiliGPT API Key'}
+              </Label>
+              <Input
+                id="biligpt-api-key"
+                type="password"
+                value={biligptApiKey}
+                onChange={(e) => setBiligptApiKey(e.target.value)}
+                placeholder={language === 'zh' ? '输入您的 BiliGPT API 密钥' : 'Enter your BiliGPT API key'}
+                className="w-full bg-background text-foreground placeholder:text-muted-foreground font-medium"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="biligpt-api-url" className="text-foreground font-medium">
+                {language === 'zh' ? 'BiliGPT API URL' : 'BiliGPT API URL'}
+              </Label>
+              <Input
+                id="biligpt-api-url"
+                type="text"
+                value={biligptApiUrl}
+                onChange={(e) => setBiligptApiUrl(e.target.value)}
+                placeholder={language === 'zh' ? '输入 BiliGPT API URL' : 'Enter BiliGPT API URL'}
+                className="w-full bg-background text-foreground placeholder:text-muted-foreground font-medium"
+              />
+            </div>
           </div>
 
           <button
